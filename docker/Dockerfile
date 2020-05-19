@@ -1,6 +1,6 @@
 FROM php:7.4-fpm
 
-# Arguments defined in docker-compose.yml
+# Arguments defined in docker.yml
 ARG user
 ARG uid
 
