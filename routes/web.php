@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::view('/', 'welcome')->name('home');
+Route::view('/', 'splash')->name('splash');
 
 Route::middleware('guest')->group(function () {
     Route::view('login', 'auth.login')->name('login');
@@ -28,5 +28,7 @@ Route::middleware('auth')->group(function () {
     Route::get('email/verify/{id}/{hash}', 'Auth\EmailVerificationController')->middleware('signed')->name('verification.verify');
     Route::post('logout', 'Auth\LogoutController')->name('logout');
     Route::view('password/confirm', 'auth.passwords.confirm')->name('password.confirm');
-    Route::get('collection/{username}', 'DiscogsController@index')->name('discogs.get_collection');
+
+    Route::view('collection', 'home')->name('home');
+    Route::post('collection', 'DiscogsController@index')->name('discogs.get_collection');
 });

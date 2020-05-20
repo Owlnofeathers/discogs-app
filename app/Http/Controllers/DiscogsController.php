@@ -2,8 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Validation\ValidationException;
+use Illuminate\View\View;
 
 class DiscogsController extends Controller
 {
@@ -15,19 +20,24 @@ class DiscogsController extends Controller
     }
 
     /**
-     * @param string $username
-     * @return array
+     * @param Request $request
+     * @return Application|Factory|RedirectResponse|View
+     * @throws ValidationException
      */
-    public function index(string $username): array
+    public function index(Request $request)
     {
+        $this->validate($request, [
+            'username' => 'required|string',
+        ]);
+
         $collection = Http::withHeaders($this->getHeaders())
-            ->get($this->endpoint . '/users/' . $username . '/collection/folders/0/releases');
+            ->get($this->endpoint . '/users/' . $request->input('username') . '/collection/folders/0/releases');
 
         if ($collection->successful()) {
-            return $collection->json();
+            return view('home', ['data' => $collection->json()]);
         }
 
-        abort(404, $collection->json()['message']);
+        return redirect()->back()->with('message', [$collection->json()['message'] ?? 'User does not exist or may have been deleted.']);
     }
 
     /**

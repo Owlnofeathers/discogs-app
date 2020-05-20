@@ -17,10 +17,10 @@ class DiscogsControllerTest extends TestCase
         $user = factory(User::class)->create();
         $this->be($user);
 
-        $response = $this->getJson(route('discogs.get_collection', ['username' => $this->faker->userName]))
-            ->assertNotFound();
-
-        $this->assertSame('User does not exist or may have been deleted.', $response->json()['message']);
+        // test a discogs username that definitely doesnt exist
+        $this->postJson(route('discogs.get_collection', ['username' => 'aa']))
+            ->assertRedirect()
+            ->assertSessionHas('message');
     }
 
     public function testGetCollectionSuccess()
@@ -28,9 +28,8 @@ class DiscogsControllerTest extends TestCase
         $user = factory(User::class)->create();
         $this->be($user);
 
-        $response = $this->getJson(route('discogs.get_collection', ['username' => 'Owlsays']))
-            ->assertOk();
-
-        $this->assertArrayHasKey('releases', $response->json());
+        $this->postJson(route('discogs.get_collection', ['username' => 'Owlsays']))
+            ->assertViewIs('home')
+            ->assertViewHas('data');
     }
 }
