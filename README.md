@@ -10,7 +10,7 @@ Run NPM commands with `docker-compose run --rm npm `.
 
 Start dev environment with `docker-compose run --rm npm run dev`.
 
-Vie app in browser at `http://localhost:8000/`
+View app in browser at `http://localhost:8000/`
 
 
 ## License
