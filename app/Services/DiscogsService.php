@@ -26,17 +26,19 @@ class DiscogsService
      */
     public function getCollection(string $username, int $page = null)
     {
-        $page = $page ? '&page=' . $page : '';
+        $page = $page ? '?perPage=50&page=' . $page : '';
 
         $collection = Http::withHeaders($this->getHeaders())
-            ->get($this->endpoint . '/users/' . $username . '/collection/folders/0/releases?perPage=50' . $page);
+            ->get($this->endpoint . '/users/' . $username . '/collection/folders/0/releases' . $page);
 
-        if ($collection->successful() && auth()->user()->discogs_username !== strtolower($username)) {
-            auth()->user()->update(
-                [
-                    'discogs_username' => strtolower($username)
-                ]
-            );
+        if ($collection->successful()) {
+            if (auth()->user()->discogs_username !== strtolower($username)) {
+                auth()->user()->update(
+                    [
+                        'discogs_username' => strtolower($username)
+                    ]
+                );
+            }
 
             return view('home', ['data' => $collection->json()]);
         }
