@@ -29,6 +29,6 @@ Route::middleware('auth')->group(function () {
     Route::post('logout', 'Auth\LogoutController')->name('logout');
     Route::view('password/confirm', 'auth.passwords.confirm')->name('password.confirm');
 
-    Route::view('collection', 'home')->name('home');
+    Route::get('collection', 'HomeController@show')->name('home');
     Route::post('collection', 'DiscogsController@index')->name('discogs.get_collection');
 });
