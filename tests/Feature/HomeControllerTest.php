@@ -41,7 +41,8 @@ class HomeControllerTest extends TestCase
 
         $this->getJson(route('home'))->assertOk()
             ->assertViewIs('home')
-            ->assertViewHas('data')
+            ->assertViewHas('releases')
+            ->assertViewHas('pagination')
             ->assertSee('Artist');
     }
 }

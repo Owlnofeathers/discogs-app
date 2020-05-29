@@ -27,9 +27,17 @@ class DiscogsController extends Controller
             ]
         );
 
-        return (new DiscogsService())->getCollection(
+        $collection = (new DiscogsService())->getCollection(
             $request->input('username'),
             $request->input('page')
         );
+
+        if (empty($collection)) {
+            return redirect()->back()->withErrors(
+                ['message' => $collection['message'] ?? 'User does not exist or may have been deleted.']
+            );
+        }
+
+        return view('home', $collection);
     }
 }

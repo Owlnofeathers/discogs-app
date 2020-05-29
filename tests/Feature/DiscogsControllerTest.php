@@ -31,12 +31,13 @@ class DiscogsControllerTest extends TestCase
 
         $response = $this->postJson(route('discogs.get_collection', ['username' => $username]))
             ->assertViewIs('home')
-            ->assertViewHas('data');
+            ->assertViewHas('releases')
+            ->assertViewHas('pagination');
 
         $user = $user->fresh();
         $this->assertSame(strtolower($username), $user->discogs_username);
 
-        $pagination = $response->getOriginalContent()->getData()['data']['pagination'];
+        $pagination = $response->getOriginalContent()->getData()['pagination'];
         $this->assertSame(1, $pagination['page']);
         $this->assertStringEndsWith('page=2', $pagination['urls']['next']);
     }
@@ -62,9 +63,10 @@ class DiscogsControllerTest extends TestCase
             )
         )
             ->assertViewIs('home')
-            ->assertViewHas('data');
+            ->assertViewHas('releases')
+            ->assertViewHas('pagination');
 
-        $pagination = $response->getOriginalContent()->getData()['data']['pagination'];
+        $pagination = $response->getOriginalContent()->getData()['pagination'];
         $this->assertSame($page, $pagination['page']);
         $this->assertStringEndsWith('page=11', $pagination['urls']['next']);
         $this->assertStringEndsWith('page=9', $pagination['urls']['prev']);

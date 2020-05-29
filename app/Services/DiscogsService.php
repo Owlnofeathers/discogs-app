@@ -4,11 +4,7 @@
 namespace App\Services;
 
 
-use Illuminate\Contracts\Foundation\Application;
-use Illuminate\Contracts\View\Factory;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Http;
-use Illuminate\View\View;
 
 class DiscogsService
 {
@@ -22,14 +18,15 @@ class DiscogsService
     /**
      * @param string $username
      * @param int|null $page
-     * @return Application|Factory|RedirectResponse|View
+     * @return array
      */
-    public function getCollection(string $username, int $page = null)
+    public function getCollection(string $username, int $page = null): array
     {
-        $page = $page ? '?perPage=50&page=' . $page : '';
+        $page = $page ? 'page=' . $page . '&' : '';
+        $sort = 'sort=added&sort_order=desc&';
 
         $collection = Http::withHeaders($this->getHeaders())
-            ->get($this->endpoint . '/users/' . $username . '/collection/folders/0/releases' . $page);
+            ->get($this->endpoint . '/users/' . $username . '/collection/folders/0/releases?' . $sort . $page . 'per_page=15');
 
         if ($collection->successful()) {
             if (auth()->user()->discogs_username !== strtolower($username)) {
@@ -40,12 +37,10 @@ class DiscogsService
                 );
             }
 
-            return view('home', ['data' => $collection->json()]);
+            return $collection->json();
         }
 
-        return redirect()->back()->withErrors(
-            ['message' => $collection->json()['message'] ?? 'User does not exist or may have been deleted.']
-        );
+        return [];
     }
 
     /**

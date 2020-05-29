@@ -3,7 +3,7 @@
 @section('content')
     <div class="flex items-center justify-center">
         <div class="flex flex-col justify-around">
-            @if(isset($data) && isset($data['releases']) && isset($data['releases'][0]))
+            @if(isset($releases) && isset($releases[0]))
                 <div class="flex flex-col">
                     <div class="-my-2 py-2 overflow-x-auto sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
                         <div class="align-middle inline-block min-w-full shadow overflow-hidden sm:rounded-lg border-b border-gray-200">
@@ -25,46 +25,10 @@
                                     <th class="px-6 py-3 border-b border-gray-200 bg-gray-50"></th>
                                 </tr>
                                 </thead>
-                                <tbody class="bg-white">
-                                    @foreach($data['releases'] as $release)
-                                        <tr>
-                                            <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                                                <div class="flex items-center">
-                                                    <div class="ml-4">
-                                                        <div class="text-sm leading-5 font-medium text-gray-900">
-                                                            {{ $release['basic_information']['artists'][0]['name'] }}
-                                                        </div>
-                                                        <div class="text-sm leading-5 text-gray-500">Artist info</div>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                                                <div class="text-sm leading-5 text-gray-900">
-                                                    {{ $release['basic_information']['title'] }}
-                                                </div>
-                                                <div class="text-sm leading-5 text-gray-500">Album info</div>
-                                            </td>
-                                            <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                                                <div class="text-sm leading-5 text-gray-900">
-                                                    {{ $release['basic_information']['labels'][0]['name'] }}
-                                                </div>
-                                                <div class="text-sm leading-5 text-gray-500">Label info</div>
-                                            </td>
-                                            <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200 text-sm leading-5 text-gray-500">
-                                                <div class="text-sm leading-5 text-gray-900">
-                                                    {{ isset($release['basic_information']['styles'][0]) ? $release['basic_information']['styles'][0] : '' }}
-                                                </div>
-                                            </td>
-                                            <td class="px-6 py-4 whitespace-no-wrap text-right border-b border-gray-200 text-sm leading-5 font-medium">
-                                                <a href="#" class="text-indigo-600 hover:text-indigo-900">Edit</a>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
+                                <livewire:releases :releases="$releases"></livewire:releases>
                             </table>
 
-                            <x-pagination :pagination="$data['pagination']"></x-pagination>
-
+                            <livewire:pagination :pagination="$pagination"></livewire:pagination>
                         </div>
                     </div>
                 </div>
@@ -88,12 +52,13 @@
                                 </div>
 
                                 @error('message')
-                                    <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                                <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                                 @enderror
 
                                 <div class="mt-6">
                                     <span class="block w-full rounded-md shadow-sm">
-                                        <button type="submit" class="flex justify-center w-full px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out">
+                                        <button type="submit"
+                                                class="flex justify-center w-full px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out">
                                             Enter
                                         </button>
                                     </span>

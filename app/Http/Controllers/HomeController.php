@@ -10,10 +10,11 @@ class HomeController extends Controller
     {
         $user = auth()->user();
 
+        $items = [];
         if ($user->discogs_username) {
-            return (new DiscogsService())->getCollection($user->discogs_username);
+            $items = (new DiscogsService())->getCollection($user->discogs_username);
         }
 
-        return view('home');
+        return view('home', $items);
     }
 }
